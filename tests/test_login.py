@@ -18,4 +18,4 @@ def test_invalid_login(password):
 
 @pytest.mark.parametrize("password", [("admin", "wrongpass")])
 def test_force_fail(password):
-    assert password == "admin123"
+    assert password == "uzipass"
