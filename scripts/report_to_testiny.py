@@ -19,14 +19,17 @@ class TestinyReporter:
         """Create a new test run and return its ID."""
         url = f"{self.base_url}/testrun"
         payload = {
-            "project_id": self.project_id,
+            "projectId": self.project_id,  # Changed from project_id to projectId
             "name": name,
-            "start_time": datetime.utcnow().isoformat(),
-            "status": "IN_PROGRESS"
+            "startTime": datetime.utcnow().isoformat(),  # Changed from start_time to startTime
+            "status": "IN_PROGRESS",
+            "description": "Automated test execution from CI/CD pipeline"  # Added description
         }
         
         try:
             response = requests.post(url, headers=self.headers, json=payload)
+            if response.status_code != 200:
+                print(f"Response content: {response.text}")  # Added response content logging
             response.raise_for_status()
             return response.json()["id"]
         except RequestException as e:
@@ -40,11 +43,13 @@ class TestinyReporter:
         payload = {
             "status": status,
             "comment": comment,
-            "execution_time": datetime.utcnow().isoformat()
+            "executionTime": datetime.utcnow().isoformat()  # Changed from execution_time to executionTime
         }
         
         try:
             response = requests.post(url, headers=self.headers, json=payload)
+            if response.status_code != 200:
+                print(f"Response content: {response.text}")  # Added response content logging
             response.raise_for_status()
             print(f"Updated test case {test_case_external_id} with status {status}")
         except RequestException as e:
@@ -55,11 +60,13 @@ class TestinyReporter:
         url = f"{self.base_url}/testrun/{test_run_id}"
         payload = {
             "status": status,
-            "end_time": datetime.utcnow().isoformat()
+            "endTime": datetime.utcnow().isoformat()  # Changed from end_time to endTime
         }
         
         try:
             response = requests.patch(url, headers=self.headers, json=payload)
+            if response.status_code != 200:
+                print(f"Response content: {response.text}")  # Added response content logging
             response.raise_for_status()
             print(f"Finalized test run {test_run_id} with status {status}")
         except RequestException as e:
@@ -70,7 +77,7 @@ def main():
     api_token = os.environ.get("TESTINY_TOKEN")
     project_id = "2"
     
-    if not api_token:  # Changed condition since project_id is hardcoded
+    if not api_token:
         raise ValueError("TESTINY_TOKEN environment variable must be set")
 
     # Load test results
