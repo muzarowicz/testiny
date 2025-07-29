@@ -19,17 +19,17 @@ class TestinyReporter:
         """Create a new test run and return its ID."""
         url = f"{self.base_url}/testrun"
         payload = {
-            "projectId": self.project_id,  # Changed from project_id to projectId
-            "name": name,
-            "startTime": datetime.utcnow().isoformat(),  # Changed from start_time to startTime
+            "project_id": self.project_id,  # Use snake_case as per API
+            "title": name,  # Changed from name to title
+            "start_time": datetime.utcnow().isoformat(),
             "status": "IN_PROGRESS",
-            "description": "Automated test execution from CI/CD pipeline"  # Added description
+            "description": "Automated test execution from CI/CD pipeline"
         }
         
         try:
             response = requests.post(url, headers=self.headers, json=payload)
             if response.status_code != 200:
-                print(f"Response content: {response.text}")  # Added response content logging
+                print(f"Response content: {response.text}")
             response.raise_for_status()
             return response.json()["id"]
         except RequestException as e:
@@ -43,13 +43,13 @@ class TestinyReporter:
         payload = {
             "status": status,
             "comment": comment,
-            "executionTime": datetime.utcnow().isoformat()  # Changed from execution_time to executionTime
+            "execution_time": datetime.utcnow().isoformat()  # Use snake_case as per API
         }
         
         try:
             response = requests.post(url, headers=self.headers, json=payload)
             if response.status_code != 200:
-                print(f"Response content: {response.text}")  # Added response content logging
+                print(f"Response content: {response.text}")
             response.raise_for_status()
             print(f"Updated test case {test_case_external_id} with status {status}")
         except RequestException as e:
@@ -60,13 +60,13 @@ class TestinyReporter:
         url = f"{self.base_url}/testrun/{test_run_id}"
         payload = {
             "status": status,
-            "endTime": datetime.utcnow().isoformat()  # Changed from end_time to endTime
+            "end_time": datetime.utcnow().isoformat()  # Use snake_case as per API
         }
         
         try:
             response = requests.patch(url, headers=self.headers, json=payload)
             if response.status_code != 200:
-                print(f"Response content: {response.text}")  # Added response content logging
+                print(f"Response content: {response.text}")
             response.raise_for_status()
             print(f"Finalized test run {test_run_id} with status {status}")
         except RequestException as e:
@@ -94,8 +94,9 @@ def main():
     # Initialize reporter
     reporter = TestinyReporter(api_token, project_id)
 
-    # Create test run
-    test_run_name = f"Automated Test Run - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+    # Create test run with a more descriptive name
+    timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    test_run_name = f"Automated Test Run [{timestamp}]"
     try:
         test_run_id = reporter.create_test_run(test_run_name)
     except RequestException:
