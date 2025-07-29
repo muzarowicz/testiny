@@ -24,3 +24,16 @@ jobs:
           TESTINY_API_KEY: ${{ secrets.TESTINY_TOKEN }}
           TESTINY_PROJECT_ID: "2"  # or your project ID
         run: python scripts/report_to_testiny.py
+  complete-test-run:
+    needs: test
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Complete test run
+        env:
+          TESTINY_API_KEY: ${{ secrets.TESTINY_API_KEY }}
+        run: |
+          npx @testiny/cli automation \
+            --project 2 \
+            --source pytest-tests \
+            --complete-runs

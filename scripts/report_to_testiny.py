@@ -73,7 +73,7 @@ def submit_to_testiny(junit_file: str) -> None:
     env = os.environ.copy()
     env["TESTINY_API_KEY"] = api_key
 
-    # Submit results using Testiny CLI
+    # Base command
     cmd = [
         "npx",
         "@testiny/cli",
@@ -83,14 +83,25 @@ def submit_to_testiny(junit_file: str) -> None:
         "--junit", junit_file
     ]
 
-    # If running in GitHub Actions, the CLI will automatically detect and add CI environment variables
+    # Handle GitHub Actions environment
     if os.environ.get("GITHUB_ACTIONS"):
         print("Detected GitHub Actions environment")
+        # Add --incomplete flag to allow multiple submissions in the same CI run
+        cmd.append("--incomplete")
+        
+        # Add custom run fields to differentiate between test runs
+        job_id = os.environ.get("GITHUB_JOB", "unknown")
+        attempt = os.environ.get("GITHUB_RUN_ATTEMPT", "1")
+        cmd.extend([
+            "--field-values", f"job_id={job_id},attempt={attempt}",
+            "--run-fields", "ci_repository,ci_run_id,job_id,attempt"
+        ])
     else:
         # For local runs, add a custom run title
         timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         cmd.extend(["--run-title-pattern", f"Pytest Run - {timestamp}"])
 
+    print(f"Running Testiny CLI command: {' '.join(cmd)}")
     try:
         result = subprocess.run(cmd, env=env, check=True, capture_output=True, text=True)
         print("Successfully submitted results to Testiny")
