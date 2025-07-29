@@ -8,7 +8,7 @@ from requests.exceptions import RequestException
 
 class TestinyReporter:
     def __init__(self, api_token: str, project_id: str):
-        self.base_url = "https://api.testiny.io/api/v1"
+        self.base_url = "https://app.testiny.io/api/v1"
         self.headers = {
             "Authorization": f"Bearer {api_token}",
             "Content-Type": "application/json"
@@ -70,8 +70,8 @@ def main():
     api_token = os.environ.get("TESTINY_TOKEN")
     project_id = "2"
     
-    if not api_token or not "2":
-        raise ValueError("TESTINY_TOKEN and TESTINY_PROJECT_ID environment variables must be set")
+    if not api_token:  # Changed condition since project_id is hardcoded
+        raise ValueError("TESTINY_TOKEN environment variable must be set")
 
     # Load test results
     try:
