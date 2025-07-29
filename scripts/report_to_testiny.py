@@ -6,11 +6,11 @@ from pathlib import Path
 
 def submit_to_testiny(junit_file: str) -> None:
     """Submit test results to Testiny using the CLI."""
-    api_key = os.environ.get("TESTINY_TOKEN")
+    api_key = os.environ.get("TESTINY_API_KEY")
     project_id = os.environ.get("TESTINY_PROJECT_ID", "2")
     
     if not api_key:
-        raise ValueError("TESTINY_TOKEN environment variable must be set")
+        raise ValueError("TESTINY_API_KEY environment variable must be set")
 
     # Install Testiny CLI if not already installed
     try:
