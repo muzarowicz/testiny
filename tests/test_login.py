@@ -12,17 +12,17 @@ def test_valid_login(username, password):
     """[externalId=TC_LOGIN_001]"""
     assert username == "admin" and password == "admin123"
 
-@pytest.mark.parametrize("password", [("admin", "wrongpass")])
+@pytest.mark.parametrize("password", ["wrongpass"])
 def test_invalid_login(password):
     """[externalId=TC_LOGIN_002]"""
     assert password != "admin123"
 
 
-@pytest.mark.parametrize("password", [("admin", "wrongpass")])
+@pytest.mark.parametrize("password", ["wrongpass"])
 def test_force_fail(password):
     """[externalId=TC_LOGIN_003]"""
     assert password == "uzipass"
 
-@pytest.mark.parametrize("password", [("admin", "uzipass")])
+@pytest.mark.parametrize("password", ["uzipass"])
 def test_force_pass(password):
     assert password == "uzipass"
