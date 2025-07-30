@@ -22,3 +22,8 @@ def test_invalid_login(password):
 def test_force_fail(password):
     """[externalId=TC_LOGIN_003]"""
     assert password == "uzipass"
+
+@pytest.mark.parametrize("password", [("admin", "uzipass")])
+def test_force_[ass](password):
+    """[externalId=TC_LOGIN_004]"""
+    assert password == "uzipass"
