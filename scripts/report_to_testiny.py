@@ -4,6 +4,20 @@ import subprocess
 from datetime import datetime
 from pathlib import Path
 
+def print_xml_report(junit_file: Path) -> None:
+    """Print the content of the JUnit XML report."""
+    if junit_file.exists():
+        print(f"\n=== JUnit XML Report Content ({junit_file}) ===")
+        try:
+            with open(junit_file, 'r') as f:
+                content = f.read()
+                print(content)
+        except Exception as e:
+            print(f"Failed to read XML file: {e}")
+        print("=" * 50)
+    else:
+        print(f"XML report file not found: {junit_file}")
+
 def run_pytest(junit_file: Path) -> bool:
     """Run pytest and generate JUnit XML report.
     Returns True if tests were found and run (regardless of pass/fail)."""
@@ -61,6 +75,9 @@ def submit_to_testiny(junit_file: str) -> None:
     
     if not api_key:
         raise ValueError("TESTINY_API_KEY environment variable must be set")
+
+    # Print the XML report content before submitting
+    print_xml_report(Path(junit_file))
 
     # Install Testiny CLI if not already installed
     try:
