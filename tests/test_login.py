@@ -17,7 +17,7 @@ def test_force_fail(password):
     """[testinyId=TC-42]"""
     assert password == "uzipass"
 
-@pytest.mark.parametrize("password", ["uzipass"])
+@pytest.mark.parametrize("password", ["uzipasss"])
 def test_force_pass(password):
     """[testinyId=TC-43]"""
-    assert password == "uzipass"
+    assert password == "uzipasss"
