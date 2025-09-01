@@ -21,8 +21,8 @@ jobs:
           
       - name: Run tests and submit to Testiny
         env:
-          TESTINY_API_KEY: ${{ secrets.TESTINY_TOKEN }}
-          TESTINY_PROJECT_ID: "3"  # or your project ID
+          TESTINY_API_KEY: ${{ secrets.TESTINY_API_KEY }}
+          TESTINY_PROJECT_ID: "3"
         run: python scripts/report_to_testiny.py
   complete-test-run:
     needs: test
@@ -34,6 +34,8 @@ jobs:
           TESTINY_API_KEY: ${{ secrets.TESTINY_API_KEY }}
         run: |
           npx @testiny/cli automation \
-            --project 2 \
+            --project 3 \
             --source pytest-tests \
+            --field-values job_id=${{ github.job }},attempt=${{ github.run_attempt }} \
+            --run-fields ci_repository,ci_run_id,job_id,attempt \
             --complete-runs
